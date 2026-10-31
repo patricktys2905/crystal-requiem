@@ -200,6 +200,9 @@ canvas.pt{display:block}
 .tok.preview .stand,.tok.preview .shadow{opacity:.6}
 .tok.preview .fig{filter:saturate(.55) brightness(.85) drop-shadow(0 0 1px rgba(10,13,41,.9))}
 .tok.boss .spr{height:300%;bottom:14%}
+.tok.spirit .spr{height:140%;bottom:22%}
+.tok.spirit .fig{filter:drop-shadow(0 0 4px #ffe7a3) drop-shadow(0 0 12px rgba(255,214,120,.5));opacity:.92}
+.tok.spirit .plate{display:none}
 .tok.boss .shadow{left:-35%;right:-35%;top:8%;bottom:-8%}
 .tok.boss .bars{bottom:320%;left:-15%;right:-15%}
 .tok.od .fig{filter:drop-shadow(0 0 2px #fff) drop-shadow(0 0 9px var(--crystal))}
@@ -555,6 +558,8 @@ body.dragging .sellbar{display:grid}
 .cover{margin:-22px -22px 14px;aspect-ratio:16/9;overflow:hidden;border-radius:12px 12px 0 0;mask-image:linear-gradient(#000 75%,transparent)}
 .cover img,.cover video{width:100%;height:100%;object-fit:cover;display:block}
 .mode{overflow:hidden}
+.mode.fest{border-color:rgba(255,214,120,.55)}
+.evt{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#062430;background:linear-gradient(180deg,#ffe7a3,#f2b84b);border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle}
 .mban{display:block;margin:-12px -12px 4px;width:calc(100% + 24px);aspect-ratio:16/7;object-fit:cover}
 .wfig{position:absolute;inset:0;z-index:2;padding:0;border:0;background:none;cursor:pointer}
 .wfig:disabled{cursor:default}
@@ -771,6 +776,7 @@ const ORIGINS={
   sky:{name:'Skyreach',col:'#9adcff',dark:'#1f5aa6',th:[2,3],desc:['Skyreach heroines attack 20% faster.','Skyreach heroines attack 45% faster.'],lore:'Airship nation of the high winds.'},
   ember:{name:'Emberfall',col:'#ffb36b',dark:'#a8361c',th:[2,3],desc:['Attacks deal bonus true damage equal to 3% of the target\'s max HP. Doubled by day.','Bonus true damage rises to 6% of max HP. Doubled by day.'],lore:'Desert kingdom of the undying sun.'},
   luna:{name:'Lunaris',col:'#cdbaff',dark:'#4f37a8',th:[2,3],desc:['Lunaris heroines dodge 15% of attacks, 25% at night.','Dodge 25% of attacks (40% at night) and gain mana 50% faster.'],lore:'Moon-court hidden in silver forests.'},
+  grove:{name:'Thornwild',col:'#a8e08a',dark:'#2f6b35',th:[2,3],desc:['Thornwild heroines regenerate 2% of their max HP every second.','Thornwild heroines regenerate 4% of their max HP every second and have 20% more HP.'],lore:'Druid realm of the ancient living forest.'},
   iron:{name:'Ironveil',col:'#e6dfcc',dark:'#4c5664',th:[2,3],desc:['Ironveil heroines start combat with a shield.','Your whole team starts combat with a shield.'],lore:'Steam-forge city under endless clouds.'},
 };
 const JOBS={
@@ -780,6 +786,7 @@ const JOBS={
   ninja:{name:'Ninja',hp:570,ad:60,as:0.9,armor:20,range:1,mana:50,start:0,th:[2,4],spell:'Shadowstep',spellDesc:'Blinks to the weakest enemy and strikes for 260% damage. Leaps to the enemy backline when combat starts.',desc:['Ninjas gain +20% crit chance.','Ninjas gain +40% crit chance.']},
   ranger:{name:'Ranger',hp:500,ad:56,as:0.8,armor:15,range:4,mana:70,start:10,th:[2,4],spell:'Piercing Arrow',spellDesc:'Looses an arrow that passes through the target and hits every enemy in a line behind it for 200% damage.',desc:['Rangers deal 20% more attack damage.','Rangers deal 50% more attack damage.']},
   lancer:{name:'Lancer',hp:680,ad:54,as:0.7,armor:30,range:1,mana:70,start:10,th:[2,4],spell:'Skyfall',spellDesc:'Leaps high and crashes onto the farthest enemy within 3 squares for 220% damage, splashing 120% to enemies beside it.',desc:['Lancers heal for 15% of the damage they deal.','Lancers heal for 35% of the damage they deal.']},
+  summoner:{name:'Summoner',hp:540,ad:36,as:0.7,armor:15,range:3,mana:70,start:20,th:[2,4],spell:'Spirit Call',spellDesc:'Calls a golden spirit beast beside her that fights until it falls. She can keep two spirits at once.',desc:['Spirits are 40% stronger.','Spirits are twice as strong, and every Summoner calls one when combat starts.']},
   bard:{name:'Bard',hp:520,ad:36,as:0.7,armor:15,range:3,mana:80,start:30,th:[2,4],spell:'Rondo of Valor',spellDesc:'Allies within 2 squares attack 40% faster for 4 seconds and gain 20 mana.',desc:['Your whole team starts combat with +15 mana.','Your whole team starts combat with +35 mana.']},
 };
 const HEROES=[
@@ -804,6 +811,11 @@ const HEROES=[
   {id:'elka',name:'Elka',origin:'iron',job:'knight',cost:2,title:'Boilerplate Guard',quote:'Behind me. Always behind me.'},
   {id:'vesper',name:'Vesper',origin:'iron',job:'ranger',cost:3,title:'Clockwork Sharpshooter',quote:'Wind, distance, heartbeat. Calculated. Released.'},
   {id:'odette',name:'Odette',origin:'iron',job:'bmage',cost:3,title:'Arc Engineer',quote:'Fascinating. Let\'s see what twelve thousand volts does.'},
+  {id:'brin',name:'Brin',origin:'grove',job:'summoner',cost:1,title:'Fox-Spirit Caller',quote:'Pip says you look friendly. Pip is usually wrong, but okay!'},
+  {id:'ivy',name:'Ivy',origin:'grove',job:'knight',cost:1,title:'Barkshield Warden',quote:'The forest has stood for a thousand years. So will this line.'},
+  {id:'thalia',name:'Thalia',origin:'grove',job:'summoner',cost:2,title:'Stag-Spirit Druid',quote:'Breathe with the forest. It is older than your fear.'},
+  {id:'saffi',name:'Saffi',origin:'grove',job:'ranger',cost:2,title:'Thornbow Scout',quote:'You never saw me. That was the point.'},
+  {id:'maelis',name:'Maelis',origin:'grove',job:'summoner',cost:3,title:'Elder Grove Matriarch',quote:'Every seed remembers the tree it will become. So do I.'},
 ];
 const HERO=Object.fromEntries(HEROES.map(h=>[h.id,h]));
 const BONDS=[
@@ -818,6 +830,8 @@ const BONDS=[
   {a:'leila',b:'cosette',name:'Sun and Moon Duet',why:'Two stages, one unfinished song.'},
   {a:'amira',b:'vesper',name:'Sand and Steel',why:'A caravan guard and the engineer who rebuilt her spear.'},
   {a:'fiora',b:'lark',name:'Crow\'s Nest Chorus',why:'Lark sings the night watch. Fiora pretends not to listen.'},
+  {a:'brin',b:'thalia',name:'Spirit Kin',why:'Thalia found Brin and her fox spirit lost in a snowstorm and taught her to listen.'},
+  {a:'ivy',b:'elka',name:'Bark and Boiler',why:'Two shield-walls who argue about whether wood or steel holds better.'},
 ].map(b=>({...b,key:b.a+'-'+b.b}));
 const BOSSES={
   5:{name:'Hollow Wyrmling',title:'A sky-drake hollowed out by the dark',hp:2600,ad:85,as:0.6,armor:30,mana:90,aoe:1,art:'art/boss-wyrm.webp'},
@@ -845,6 +859,9 @@ const NODES={
 const BOON_ICO='<path d="M12 2l2.5 7.5L22 12l-7.5 2.5L12 22l-2.5-7.5L2 12l7.5-2.5z"/>';
 const scaleHp=(e,k)=>{e.maxHp=Math.round(e.maxHp*k);e.hp=e.maxHp};
 const BOONS={
+  sunshield:{name:'Parasol Guard',tag:'Festival',fest:true,desc:'Your heroines start every fight with a shield worth 15% of their HP.',battle:()=>S.ents.filter(e=>e.side===0).forEach(e=>e.shield+=Math.round(e.maxHp*0.15))},
+  tidewave:{name:'Tidal Wave',tag:'Festival',fest:true,desc:'Enemies attack 25% slower for the first 6 seconds of every fight.',battle:()=>S.ents.filter(e=>e.side===1).forEach(e=>{e.asBuff=0.75;e.asBuffUntil=6})},
+  shells:{name:'Seashell Purse',tag:'Festival',fest:true,desc:'Gain 2 extra shards after every fight.'},
   gale:{name:'Gale Force',tag:'Skyreach',desc:'Skyreach heroines attack 25% faster.',ent:e=>{if(e.origin==='sky')e.as*=1.25}},
   sun:{name:'Midday Sun',tag:'Emberfall',desc:'Emberfall burns as if it were always day.',ent:(e,night)=>{if(e.origin==='ember'&&night)e.emberPct*=2}},
   moon:{name:'Eternal Moon',tag:'Lunaris',desc:'Lunaris heroines dodge as if it were always night and gain mana 20% faster.',
@@ -887,6 +904,8 @@ const ASC=['Standard run.','Enemies have 10% more HP and attack.','You start wit
   'Boons offer 2 choices instead of 3.','Enemy heroines start combat with 20 extra mana.'];
 const ACH={
   firstwin:['Requiem Silenced','Win a campaign run.'],
+  festival:['Festival Champion','Win the Summer Festival.'],
+  summoner:['Spirit Chorus','Field three Summoners at once.'],
   asc3:['Rising Light','Win at Ascension 3 or higher.'],
   asc5:['Crystal Heart','Win at Ascension 5 or higher.'],
   asc8:['Eternal Requiem','Win at Ascension 8.'],
@@ -909,10 +928,19 @@ const META=(()=>{const d={asc:0,runs:0,wins:0,bestFloor:0,ach:{},heroes:{},boons
 const saveMeta=()=>{try{localStorage.setItem('cr-meta',JSON.stringify(META))}catch(e){}};
 function ach(id){if(META.ach[id])return;META.ach[id]=Date.now();saveMeta();setTimeout(()=>toast(`Achievement unlocked: ${ACH[id][0]}`),500)}
 // the tower cycles the three bosses every 5 floors; the campaign uses the fixed rounds
-const roundBoss=r=>G.mode==='tower'?(r%5===0?BOSSES[[5,10,15][(r/5-1)%3]]:null):BOSSES[r];
+// the Festival dresses the usual bosses for the beach: new names and a sea-green tint over the same art
+const FEST_BOSS={5:['Tidecaller Wyrmling','A sea-drake that swallowed the dark tide'],10:['The Coral Regent','A drowned king crowned in coral and regret'],15:['Requiem of the Deep','The Crystal Eater, risen from the festival bay']};
+const FEST_GUILDS=['Sandcastle Syndicate','The Salty Dogs','Coconut Corsairs','Tidepool Troupe','Sunburn Society','Driftwood Dancers','Lantern Float Club','The Undertow'];
+const roundBoss=r=>G.mode==='festival'?(BOSSES[r]&&{...BOSSES[r],name:FEST_BOSS[r][0],title:FEST_BOSS[r][1],tint:'hue-rotate(140deg) saturate(1.3)'}):G.mode==='tower'?(r%5===0?BOSSES[[5,10,15][(r/5-1)%3]]:null):BOSSES[r];
 const enemyMul=()=>(G.asc>=1?1.1:1)*(G.asc>=6?1.1:1)*(G.mode==='tower'?1+Math.max(0,G.round-12)*0.09:1);
-const roundLabel=()=>G.mode==='tower'?`Floor <b>${G.round}</b>`:`Round <b>${G.round}</b> of ${MAX_ROUND}${G.mode==='daily'?' · Daily':G.asc?` · Ascension ${G.asc}`:''}`;
+const roundLabel=()=>G.mode==='tower'?`Floor <b>${G.round}</b>`:`Round <b>${G.round}</b> of ${MAX_ROUND}${G.mode==='festival'?' · Summer Festival':G.mode==='daily'?' · Daily':G.asc?` · Ascension ${G.asc}`:''}`;
 const SCENES={
+  'brin-thalia':[['a','Thalia! Pip found a whole patch of glowberries. Can we stop? Just for a minute?'],['b','You said that about the mushrooms. And the river. And the very interesting rock.'],
+    ['a','The rock WAS interesting. Pip thought so too.'],['b','Pip agrees with everything you say. That is what happens when a spirit loves you.'],
+    ['a','...Is that why your stag always looks so grumpy at me?'],['b','He is not grumpy. He is old. Go on, then. One minute. Pick some for me too.']],
+  'ivy-elka':[['b','Wood. You hold the line with wood. Against fire.'],['a','Living bark. It heals. Your boiler plate dents and stays dented.'],
+    ['b','It dents because it took the hit for you. That is what plate is for.'],['a','Hm. Then I suppose you are worth standing next to.'],
+    ['b','Was that a compliment from the forest girl?'],['a','Do not get used to it. Shields up. They are coming.']],
   'aria-kaede':[['b','You\'ve gotten faster, Captain. Last time you swung like a woman nursing a hangover.'],['a','Last time I was nursing one. You never let me forget that you won that bout.'],
     ['b','I won\'t. But I\'ll admit something. I\'ve missed having someone worth facing.'],['a','Then stand beside me instead of across from me. We could use a blade like yours.'],
     ['b','Beside you, then. Just don\'t slow down, or I start keeping score again.']],
@@ -1069,6 +1097,7 @@ const GLYPH={
   ranger:'<path d="M21 3l-1.6 6.4-2-2-9.5 9.5 1.3 1.3-3 3-1.3-2.6L2.3 17.6l3-3 1.3 1.3 9.5-9.5-2-2z"/>',
   lancer:'<path d="M12 1l3.5 7H13v14h-2V8H8.5z M7.5 14h9v2h-9z"/>',
   bard:'<path d="M9 3h11v13.5a3 3 0 11-2-2.8V7h-7v11.5a3 3 0 11-2-2.8z"/>',
+  summoner:'<path d="M12 2a10 10 0 110 20 10 10 0 010-20zm0 3a7 7 0 100 14 7 7 0 000-14zm0 2.5l1.5 3.1 3.4.5-2.5 2.3.6 3.4-3-1.6-3 1.6.6-3.4-2.5-2.3 3.4-.5z" fill-rule="evenodd"/>',
   boss:'<path d="M12 2l10 10-10 10L2 12z M12 7l-5 5 5 5 5-5z" fill-rule="evenodd"/>',
 };
 const HEART='<path d="M12 21s-8-5.2-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 10c0 5.8-8 11-8 11z"/>';
@@ -1086,6 +1115,11 @@ const eucl=(a,b)=>Math.hypot(a.c-b.c,a.r-b.r);
 
 /* ================= portraits ================= */
 const LOOK={
+  brin:{hair:'#b8562e',eye:'#e8a33a',skin:'#ffe1cf',style:'short'},
+  ivy:{hair:'#4a3020',eye:'#9a8a4a',skin:'#f1d2b8',style:'braid'},
+  thalia:{hair:'#eef0f2',eye:'#e0c060',skin:'#fff0e6',style:'long'},
+  saffi:{hair:'#1e1a1e',eye:'#4a3020',skin:'#c99a72',style:'short'},
+  maelis:{hair:'#7a2e22',eye:'#e8b23a',skin:'#fbe6d8',style:'long'},
   aria:{hair:'#f3d27c',eye:'#3b8fdc',skin:'#ffe4d3',style:'ponytail'},
   liesel:{hair:'#86cbec',eye:'#2f6db5',skin:'#ffe6d8',style:'twintails'},
   celestine:{hair:'#f4f0ff',eye:'#7fa8ff',skin:'#fff0e6',style:'long'},
@@ -1114,17 +1148,18 @@ const ART_FILES=Object.fromEntries(HEROES.map(h=>h.id).map(id=>[id,`art/${id}.jp
 const CASUAL=new Set(['aria','liesel','celestine','rin','kaede','sahra','sera','nyx','yue','mira','elka','odette','fiora','ingrid','leila','hana','cosette','tamsin','vesper','amira','lark']);
 // bond scenes and covers that have finished illustrations; anything missing falls back to portraits
 const SCENE_ART=new Set(['aria-kaede','rin-sera','liesel-elka','nyx-yue','mira-odette','celestine-sahra','fiora-hana','ingrid-tamsin','leila-cosette','amira-vesper','fiora-lark']);
-const COVER_ART=new Set(['title','run','tower','daily']);
+const COVER_ART=new Set(['title','run','tower','daily','festival']);
 // short looping clips made from the paintings; each falls back to its still
 const CLIP_ART=new Set(['title','scene-aria-kaede','scene-nyx-yue','scene-celestine-sahra']);
 const paint=(key,src,alt='')=>CLIP_ART.has(key)&&!fx.reduce?`<video src="art/clip-${key}.mp4" poster="${src}" autoplay muted loop playsinline aria-label="${alt}"></video>`:`<img src="${src}" alt="${alt}">`;
 META.outfit=META.outfit||{};
-// every heroine has a beach outfit
-const BEACH=new Set(HEROES.map(h=>h.id));
+// beach outfits exist for the first 21 heroines
+const BEACH=new Set(HEROES.filter(h=>h.origin!=='grove').map(h=>h.id));
 const OUTFITS={casual:CASUAL,beach:BEACH};
 const OUTFIT_NAME={classic:'Classic',casual:'Off-duty',beach:'Beach'};
 const outfitsOf=id=>['classic',...Object.keys(OUTFITS).filter(k=>OUTFITS[k].has(id))];
-const outfit=id=>{const o=META.outfit[id];return OUTFITS[o]&&OUTFITS[o].has(id)?o:'classic'};
+let FEST=false; // the Summer Festival puts everyone who has a beach outfit into it
+const outfit=id=>{if(FEST&&BEACH.has(id))return 'beach';const o=META.outfit[id];return OUTFITS[o]&&OUTFITS[o].has(id)?o:'classic'};
 const nextOutfit=id=>{const l=outfitsOf(id);return l[(l.indexOf(outfit(id))+1)%l.length]};
 const artKey=id=>outfit(id)==='classic'?id:id+'-'+outfit(id);
 // Where each heroine's face sits in her full-body art, as % of width and height, for the board close-ups
@@ -1306,6 +1341,7 @@ let G=null, S=null;
 /* ================= state ================= */
 function newGame(mode='run',asc=0){
   RNG=mode==='daily'?mulberry32(hashStr('crystal-requiem '+todayKey())):Math.random;
+  FEST=mode==='festival';
   const mhp=asc>=2?80:100;
   G={round:1,hp:mhp,maxHp:mhp,mode,asc,elites:0,rivalWins:0,rivalMet:0,gold:6,level:2,xp:0,fate:0,streak:0,
     bench:Array(BENCH).fill(null),board:Array.from({length:4},()=>Array(COLS).fill(null)),
@@ -1494,7 +1530,7 @@ function makeEnemy(){
       if(placed)break;
     }
   }
-  G.enemy={units,boss:!!boss,elite,rival,name:boss?boss.name:rival?'The Gilded Thorn':elite?`${ORIGINS[theme].name} Vanguard`:rnd(GUILDS)};
+  G.enemy={units,boss:!!boss,elite,rival,name:boss?boss.name:rival?'The Gilded Thorn':elite?`${ORIGINS[theme].name} Vanguard`:rnd(G.mode==='festival'?FEST_GUILDS:GUILDS)};
 }
 
 /* ================= combat ================= */
@@ -1518,9 +1554,33 @@ function makeEntity(u,side,c,r,tr,night){
   if(u.job==='ninja')e.crit+=[0,0.2,0.4][jt];
   if(u.job==='ranger')e.ad=Math.round(e.ad*[1,1.2,1.5][jt]);
   if(u.job==='lancer')e.lifesteal=[0,0.15,0.35][jt];
+  if(h.origin==='grove'){e.regen+=[0,0.02,0.04][ot];if(ot===2)e.maxHp=e.hp=Math.round(e.maxHp*1.2)}
+  if(u.job==='summoner'){e.spiritMul=[1,1.4,2][jt];e.callAtStart=jt===2}
   if(side===0)G.boons.forEach(k=>BOONS[k].ent&&BOONS[k].ent(e,night,tr));
   applyItems(e,u.items);
   return e;
+}
+// a golden spirit beast: a melee brawler scaled from its summoner; a third call heals the two she has instead
+function summonSpirit(e){
+  const mine=S.ents.filter(x=>x.alive&&x.owner===e);
+  if(mine.length>=2){mine.forEach(x=>{heal(x,x.maxHp*0.4);fx.heal(x,'#ffe7a3')});return}
+  const opts=[];
+  for(let dc=-1;dc<=1;dc++)for(let dr=-1;dr<=1;dr++){if((dc||dr)&&freeCell(e.c+dc,e.r+dr))opts.push({c:e.c+dc,r:e.r+dr})}
+  if(!opts.length)return;
+  const fwd=e.side===0?-1:1;opts.sort((a,b)=>(a.r-b.r)*fwd*-1);
+  const m=e.spiritMul||1, p=opts[0], sp=baseEnt();
+  Object.assign(sp,{side:e.side,spirit:true,owner:e,name:'Spirit',job:'spirit',origin:e.origin,star:0,power:e.power*m,
+    maxHp:Math.round(e.maxHp*0.55*m),hp:Math.round(e.maxHp*0.55*m),ad:Math.round(e.ad*1.1*m),as:0.85,armor:20,range:1,mana:0,maxMana:99999,
+    c:p.c,r:p.r,rx:p.c,ry:p.r,cd:0.4});
+  addEnt(sp);
+  if(S.built)spiritToken(sp);
+  burst(sp.c,sp.r,'holy',1);
+}
+function spiritToken(e){
+  const el=tokenEl(null,e.side,{spirit:true});
+  posEl(el,e.c,e.r);el.style.cursor='default';
+  e.el=el;e.rimEl=el.querySelector('.fig');e.sprEl=el.querySelector('.spr');e.hpB=el.querySelector('.hpb b');e.shB=el.querySelector('.hpb s');e.mpB=el.querySelector('.mpb b');
+  ulayer.append(el);
 }
 function makeBoss(b,c,r){
   const e=baseEnt();
@@ -1532,6 +1592,7 @@ function addEnt(e){S.ents.push(e);S.occ[e.r][e.c]=e.id}
 
 function startBattle(){
   if(G.phase!=='plan')return;
+  if(new Set(boardUnits().filter(x=>x.u.job==='summoner').map(x=>x.u.hero)).size>=3)ach('summoner');
   if(G.rest)return restAdvance();
   const bu=boardUnits();
   if(!bu.length)return toast('Place at least one heroine on the blue squares first.');
@@ -1560,6 +1621,7 @@ function startBattle(){
   });
   G.boons.forEach(k=>BOONS[k].battle&&BOONS[k].battle());
   if(G.flask){G.flask=false;S.ents.filter(e=>e.side===0).forEach(e=>e.mana=Math.min(e.maxMana-1,e.mana+40))}
+  S.ents.filter(e=>e.callAtStart).forEach(summonSpirit);
   S.odNeed=0.5*S.ents.filter(e=>e.side===1).reduce((s,e)=>s+e.maxHp,0);
   const pe=S.ents.filter(e=>e.side===0);
   for(const b of BONDS){
@@ -1665,6 +1727,7 @@ function attack(e,t){
 }
 function boltColor(e){
   if(e.boss)return '#c79bff';
+  if(e.job==='summoner'||e.spirit)return '#ffe7a3';
   if(e.job==='wmage')return '#ffe7a3';
   if(e.job==='bard')return '#ffd36b';
   if(e.job==='ranger')return '#fff6d8';
@@ -1762,6 +1825,9 @@ function cast(e,t){
       fx.notes(e);
       near.forEach(a=>{a.asBuff=Math.max(a.asBuff,1.4);a.asBuffUntil=Math.max(a.asBuffUntil,S.t+4);if(a!==e)gainMana(a,20);fx.heal(a,'#ffd36b')});
       floatText(e,'Rondo of Valor','spell');break;}
+    case 'summoner':
+      summonSpirit(e);
+      floatText(e,'Spirit Call','spell');break;
     case 'boss':
       animate(e.sprEl,[{scale:'1'},{scale:'1.12'},{scale:'1'}],500);
       fx.roar(e);fx.shake(9,420);
@@ -1801,7 +1867,7 @@ function overdrive(){
 
 /* ================= poses ================= */
 // Heights (px) of each cut-out pose at the same body scale as the 640px idle art
-const POSE_H={aria:{attack:640,cast:646,hurt:640},liesel:{attack:639,cast:665,hurt:640},celestine:{attack:635,cast:656,hurt:650},rin:{attack:640,cast:640,hurt:640},kaede:{attack:633,cast:655,hurt:640},sahra:{attack:639,cast:665,hurt:639},sera:{attack:603,cast:666,hurt:640},nyx:{attack:640,cast:648,hurt:640},yue:{attack:640,cast:675,hurt:610},mira:{attack:640,cast:666,hurt:638},elka:{attack:611,cast:673,hurt:623},odette:{attack:640,cast:639,hurt:610},
+const POSE_H={brin:{attack:485,cast:609,hurt:600},ivy:{attack:640,cast:662,hurt:627},thalia:{attack:542,cast:617,hurt:617},saffi:{attack:561,cast:618,hurt:483},maelis:{attack:478,cast:601,hurt:407},aria:{attack:640,cast:646,hurt:640},liesel:{attack:639,cast:665,hurt:640},celestine:{attack:635,cast:656,hurt:650},rin:{attack:640,cast:640,hurt:640},kaede:{attack:633,cast:655,hurt:640},sahra:{attack:639,cast:665,hurt:639},sera:{attack:603,cast:666,hurt:640},nyx:{attack:640,cast:648,hurt:640},yue:{attack:640,cast:675,hurt:610},mira:{attack:640,cast:666,hurt:638},elka:{attack:611,cast:673,hurt:623},odette:{attack:640,cast:639,hurt:610},
   fiora:{attack:679,cast:672,hurt:640},leila:{attack:640,cast:665,hurt:638},hana:{attack:679,cast:679,hurt:639},
   ingrid:{attack:489,cast:676,hurt:504},cosette:{attack:639,cast:667,hurt:632},tamsin:{attack:549,cast:659,hurt:640},
   vesper:{attack:666,cast:651,hurt:627},amira:{attack:466,cast:653,hurt:643},lark:{attack:641,cast:671,hurt:641},
@@ -2077,7 +2143,7 @@ function afterBattle(win,unlocked){
   if(tower){META.bestFloor=Math.max(META.bestFloor,finished);saveMeta();if(finished>=10)ach('tower10');if(finished>=25)ach('tower25')}
   const interest=Math.min(hasBoon('treasury')?5:3,Math.floor(G.gold/10));
   const streakB=Math.abs(G.streak)>=4?2:Math.abs(G.streak)>=2?1:0;
-  const inc=5+interest+streakB+(win?1:0)+(win&&hasBoon('bounty')?2:0)-(G.asc>=5?1:0);
+  const inc=5+interest+streakB+(win?1:0)+(win&&hasBoon('bounty')?2:0)+(hasBoon('shells')?2:0)-(G.asc>=5?1:0);
   G.gold+=inc;addXP(hasBoon('scholar')?4:2);
   let patience=false;
   if(!G.rerolled){G.fate++;patience=true}
@@ -2206,7 +2272,8 @@ function eventModal(done){
     act=>{const o=ev.o[+act];if(o.can&&!o.can())return;closeModal();o.f();renderAll();done()});
 }
 function boonPick(done,kick){
-  const opts=shuffle(Object.keys(BOONS).filter(k=>!G.boons.includes(k))).slice(0,G.asc>=7?2:3);
+  const opts=shuffle(Object.keys(BOONS).filter(k=>!G.boons.includes(k)&&(!BOONS[k].fest||G.mode==='festival'))).slice(0,G.asc>=7?2:3);
+  if(G.mode==='festival'&&opts.length&&!opts.some(k=>BOONS[k].fest)){const f=Object.keys(BOONS).find(k=>BOONS[k].fest&&!G.boons.includes(k));if(f)opts[opts.length-1]=f}
   if(!opts.length)return done();
   openModal(`<p class="kick">${kick}</p><h2>Choose a Boon</h2>
     <p>A Boon lasts for the rest of the run. Build your team around it.</p>
@@ -2266,13 +2333,14 @@ function toast(msg){
 const spriteSrc=id=>CUSTOM_ART[id]||(ART_FILES[id]?`art/${artKey(id)}.webp`:null);
 function tokenEl(u,side,opts={}){
   const el=document.createElement('div');
-  const boss=opts.boss;
-  el.className='tok s'+side+(boss?' boss':'');
-  const o=boss?{col:'#c79bff',dark:'#1d0b33'}:ORIGINS[HERO[u.hero].origin];
+  const boss=opts.boss, spirit=opts.spirit;
+  el.className='tok s'+side+(boss?' boss':'')+(spirit?' spirit':'');
+  const o=boss?{col:'#c79bff',dark:'#1d0b33'}:spirit?{col:'#ffe7a3',dark:'#6b5a1e'}:ORIGINS[HERO[u.hero].origin];
   el.style.setProperty('--oc',o.col);el.style.setProperty('--od',o.dark);
-  const name=boss?boss.name:HERO[u.hero].name, job=boss?'boss':u.job, star=boss?0:u.star;
-  const src=boss?boss.art:spriteSrc(u.hero);
-  const fig=src?`<img class="fig${CUSTOM_ART[u&&u.hero]?' custom':''}" src="${src}" alt="" draggable="false">`
+  const name=boss?boss.name:spirit?'Spirit':HERO[u.hero].name, job=boss?'boss':spirit?'summoner':u.job, star=boss||spirit?0:u.star;
+  const src=boss?boss.art:spirit?'art/spirit.webp':spriteSrc(u.hero);
+  const tint=boss&&boss.tint?` style="filter:${boss.tint} drop-shadow(0 0 1px rgba(10,13,41,.95))"`:'';
+  const fig=src?`<img class="fig${CUSTOM_ART[u&&u.hero]?' custom':''}" src="${src}" alt="" draggable="false"${tint}>`
     :`<div class="fig figsvg">${boss?bossSVG():portraitSVG(u.hero,u.job)}</div>`;
   el.innerHTML=`<div class="shadow"></div>
     <div class="stand">
@@ -2355,7 +2423,9 @@ function renderBoard(){
 }
 function buildCombatTokens(){
   ulayer.innerHTML='';fxEl.innerHTML='';
+  S.built=true;
   for(const e of S.ents){
+    if(e.spirit){spiritToken(e);continue}
     const el=e.boss?tokenEl(null,1,{boss:e.boss}):tokenEl(e.unit,e.side);
     posEl(el,e.c,e.r);el.style.cursor='default';
     e.el=el;e.rimEl=el.querySelector('.fig');e.sprEl=el.querySelector('.spr');e.hpB=el.querySelector('.hpb b');e.shB=el.querySelector('.hpb s');e.mpB=el.querySelector('.mpb b');
@@ -2647,17 +2717,18 @@ function focusFate(){
 }
 function startRun(mode,asc){
   Q.length=0;QBUSY=false;
-  newGame(mode,mode==='daily'?2:mode==='tower'?0:asc);
-  queue(d=>boonPick(d,mode==='tower'?'You enter the Endless Tower':mode==='daily'?`Daily Challenge · ${todayKey()}`:'Your guild sets out'));
+  newGame(mode,mode==='daily'?2:mode==='tower'||mode==='festival'?0:asc);
+  queue(d=>boonPick(d,mode==='tower'?'You enter the Endless Tower':mode==='daily'?`Daily Challenge · ${todayKey()}`:mode==='festival'?'The Summer Festival begins':'Your guild sets out'));
 }
 let SEL_ASC=null;
 const ascHTML=a=>`${a?`<b>Ascension ${a}</b><ol>${ASC.slice(1,a+1).map(t=>`<li>${t}</li>`).join('')}</ol>`:'The standard campaign. Win it to unlock Ascension 1, where every level adds one more twist.'}`;
 function startScreen(){
   if(SEL_ASC===null||SEL_ASC>META.asc)SEL_ASC=META.asc;
-  const NEWH=['vesper','amira','lark'], NEWJ=[], daily=META.daily[todayKey()];
+  const NEWH=['brin','ivy','thalia','saffi','maelis'], NEWJ=['summoner'], daily=META.daily[todayKey()], fest=META.festival;
+  const NUM=['zero','one','two','three','four','five','six','seven','eight','nine','ten'];
   const ban=k=>COVER_ART.has(k)?`<img class="mban" src="art/cover-${k}.jpg" alt="">`:'';
   openModal(`${COVER_ART.has('title')?'<div class="cover">'+paint('title','art/cover-title.jpg')+'</div>':''}<p class="kick">An autobattler of crystal and song</p><h2>Crystal Requiem</h2><p class="tagline">Chronicle of the Fading Light</p>
-    <p>The world's crystals are going dark. Gather ${HEROES.length} heroines from four kingdoms, survive 15 rounds, and silence Requiem, the Crystal Eater.</p>
+    <p>The world's crystals are going dark. Gather ${HEROES.length} heroines from ${NUM[Object.keys(ORIGINS).length]} kingdoms, survive 15 rounds, and silence Requiem, the Crystal Eater.</p>
     <div class="modes">
       <div class="mode main">${ban('run')}<b>Campaign</b><span>15 rounds on a branching road to Requiem, the Crystal Eater.</span>
         ${META.asc?`<div class="ascrow" role="group" aria-label="Ascension level">${Array.from({length:META.asc+1},(_,i)=>`<button data-act="asc:${i}" class="${i===SEL_ASC?'on':''}" aria-pressed="${i===SEL_ASC}">${i}</button>`).join('')}</div>`:''}
@@ -2667,10 +2738,12 @@ function startScreen(){
         <span class="rec">Best: ${META.bestFloor?`${META.bestFloor} floors`:'not climbed yet'}</span><button class="btn" data-act="tower">Enter the Tower</button></div>
       <div class="mode">${ban('daily')}<b>Daily Challenge</b><span>Today's run is the same for every player: same map, shops and Boon choices, at Ascension 2.</span>
         <span class="rec">Today: ${daily?daily>=1000?`won with ${daily-1000} HP`:`reached round ${daily}`:'not played yet'}</span><button class="btn" data-act="daily">Play today's run</button></div>
+      <div class="mode fest">${ban('festival')}<b>Summer Festival <small class="evt">Event</small></b><span>The whole guild hits the beach. A 15-round run in beachwear against festival bosses, with Festival-only Boons.</span>
+        <span class="rec">Best: ${fest?fest>=1000?`won with ${fest-1000} HP`:`reached round ${fest}`:'not played yet'}</span><button class="btn" data-act="festival">Join the festival</button></div>
     </div>
     <div class="row"><button class="btn" data-act="codex">Codex and achievements · ${Object.keys(META.ach).length}/${Object.keys(ACH).length}</button><button class="btn" data-act="wardrobe">Wardrobe</button></div>
     <div class="gallery">${HEROES.map(h=>`<figure class="${NEWH.includes(h.id)?'new':''}" style="--oc:${ORIGINS[h.origin].col};--od:${ORIGINS[h.origin].dark}">${artHTML(h.id,h.job,'full')}<figcaption>${h.name}<span>${ORIGINS[h.origin].name} · ${JOBS[h.job].name}</span></figcaption></figure>`).join('')}</div>
-    <h3 class="sec">Seven jobs</h3>
+    <h3 class="sec">${NUM[Object.keys(JOBS).length].replace(/^./,c=>c.toUpperCase())} jobs</h3>
     <div class="jobgrid">${Object.entries(JOBS).map(([k,j])=>`<div class="${NEWJ.includes(k)?'new':''}"><svg viewBox="0 0 24 24">${GLYPH[k]}</svg><b>${j.name}${NEWJ.includes(k)?'<small>NEW</small>':''}</b><span>${j.spell}: ${j.spellDesc}</span></div>`).join('')}</div>
     <h3 class="sec">How to play</h3>
     <ul>
@@ -2794,10 +2867,12 @@ function gameOver(victory){
     if(G.mode==='run'&&G.asc===META.asc&&META.asc<8){META.asc++;SEL_ASC=META.asc;unlock=`<p class="unlock"><b>Ascension ${META.asc} unlocked.</b> New twist: ${ASC[META.asc]}</p>`}
   }
   if(G.mode==='daily'){const d=todayKey();META.daily[d]=Math.max(META.daily[d]||0,victory?1000+G.hp:G.round);ach('daily')}
+  if(G.mode==='festival'){META.festival=Math.max(META.festival||0,victory?1000+G.hp:G.round);if(victory)ach('festival')}
   saveMeta();
   const mode=G.mode, asc=G.asc;
-  const kick=tower?`Endless Tower · Floor ${G.round}`:`${victory?'Run complete':'Run ended'} · Round ${G.round}${mode==='daily'?' · Daily':asc?` · Ascension ${asc}`:''}`;
-  const title=tower?'The Tower claims you':victory?'The Requiem is silenced':'The crystals go dark';
+  const kick=tower?`Endless Tower · Floor ${G.round}`:`${victory?'Run complete':'Run ended'} · Round ${G.round}${mode==='festival'?' · Summer Festival':mode==='daily'?' · Daily':asc?` · Ascension ${asc}`:''}`;
+  const fest=G.mode==='festival';
+  const title=tower?'The Tower claims you':fest?(victory?'The festival is saved':'The tide wins this year'):victory?'The Requiem is silenced':'The crystals go dark';
   const line=tower?`You cleared ${cleared} floor${cleared===1?'':'s'}. Your best is ${META.bestFloor}.`
     :victory?`Your guild defeated the Crystal Eater with ${G.hp} HP to spare.`:`Your guild fell on round ${G.round}.`;
   openModal(`<p class="kick">${kick}</p><h2>${title}</h2>
