@@ -1119,8 +1119,8 @@ const COVER_ART=new Set(['title','run','tower','daily']);
 const CLIP_ART=new Set(['title','scene-aria-kaede','scene-nyx-yue','scene-celestine-sahra']);
 const paint=(key,src,alt='')=>CLIP_ART.has(key)&&!fx.reduce?`<video src="art/clip-${key}.mp4" poster="${src}" autoplay muted loop playsinline aria-label="${alt}"></video>`:`<img src="${src}" alt="${alt}">`;
 META.outfit=META.outfit||{};
-// heroines whose beach outfit has been drawn so far
-const BEACH=new Set(['aria','liesel','celestine','rin']);
+// every heroine has a beach outfit
+const BEACH=new Set(HEROES.map(h=>h.id));
 const OUTFITS={casual:CASUAL,beach:BEACH};
 const OUTFIT_NAME={classic:'Classic',casual:'Off-duty',beach:'Beach'};
 const outfitsOf=id=>['classic',...Object.keys(OUTFITS).filter(k=>OUTFITS[k].has(id))];
@@ -1813,7 +1813,7 @@ const POSE_H={aria:{attack:640,cast:646,hurt:640},liesel:{attack:639,cast:665,hu
   'hana-casual':{attack:674,cast:654,hurt:597},'cosette-casual':{attack:640,cast:658,hurt:622},'tamsin-casual':{attack:458,cast:666,hurt:473},
   'vesper-casual':{attack:625,cast:648,hurt:466},'amira-casual':{attack:447,cast:619,hurt:520},'lark-casual':{attack:514,cast:678,hurt:502},
   'aria-beach':{attack:488,cast:644,hurt:554},'liesel-beach':{attack:460,cast:675,hurt:569},'celestine-beach':{attack:580,cast:671,hurt:637},
-  'rin-beach':{attack:638,cast:656,hurt:488}};
+  'rin-beach':{attack:638,cast:656,hurt:488},'kaede-beach':{attack:387,cast:557,hurt:478},'sahra-beach':{attack:604,cast:681,hurt:637},'sera-beach':{attack:597,cast:676,hurt:570},'nyx-beach':{attack:551,cast:661,hurt:620},'yue-beach':{attack:489,cast:684,hurt:571},'mira-beach':{attack:587,cast:643,hurt:562},'elka-beach':{attack:544,cast:657,hurt:567},'odette-beach':{attack:581,cast:656,hurt:599},'fiora-beach':{attack:651,cast:675,hurt:526},'ingrid-beach':{attack:479,cast:688,hurt:640},'leila-beach':{attack:608,cast:651,hurt:574},'hana-beach':{attack:655,cast:679,hurt:544},'cosette-beach':{attack:584,cast:657,hurt:579},'tamsin-beach':{attack:514,cast:675,hurt:590},'vesper-beach':{attack:640,cast:650,hurt:593},'amira-beach':{attack:459,cast:665,hurt:556},'lark-beach':{attack:539,cast:642,hurt:534}};
 const POSE_RANK={hurt:1,attack:2,cast:3};
 const preloaded=[];
 function preloadPoses(ids){
