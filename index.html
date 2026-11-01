@@ -323,6 +323,7 @@ body.dragging .sellzone{display:grid}
   background:linear-gradient(180deg,rgba(120,20,40,.85),rgba(80,10,30,.95));border-top:2px dashed var(--foe)}
 body.dragging .sellbar{display:grid}
 .sellbar.hot{background:rgba(190,30,60,.95)}
+#sellbtn.confirm{background:linear-gradient(180deg,#c8304e,#7a1428);border-color:#ff8fa3;color:#fff}
 @media (max-width:520px){ .ctags,.cjob{display:none} .cname{font-size:11px} .card.empty{min-height:90px} .ccost{min-width:18px;height:18px;font-size:10px} }
 
 /* ---------- dossier ---------- */
@@ -2576,7 +2577,18 @@ function renderInfo(){
   if(!CUSTOM_ART[h.id])liveArt(box.querySelector('.dart img.pt'),{fit:'cover',pos:[0.5,0.08],amp:0.55});
   // on a phone the sheet covers the board, so close it once she has moved
   $('#fieldbtn').onclick=()=>{autoField(u.uid);if(document.body.classList.contains('sheet')&&matchMedia('(max-width:620px)').matches){G.sel=null;renderAll()}};
-  $('#sellbtn').onclick=()=>sell(u.uid);
+  // selling takes two taps, and taps landing just after the dossier opens are ignored, so a quick double tap on her can't sell her
+  const shownAt=performance.now();
+  $('#sellbtn').onclick=e=>{
+    const b=e.currentTarget;
+    if(performance.now()-shownAt<500)return;
+    if(!b.classList.contains('confirm')){
+      b.classList.add('confirm');b.innerHTML=`Tap again to sell <span class="c">${sellValue(u)}</span>`;
+      setTimeout(()=>{if(b.isConnected){b.classList.remove('confirm');b.innerHTML=`Sell for <span class="c">${sellValue(u)}</span>`}},3000);
+      return;
+    }
+    sell(u.uid);
+  };
   if($('#outfitbtn'))$('#outfitbtn').onclick=()=>{META.outfit[h.id]=nextOutfit(h.id);saveMeta();preloadPoses([h.id]);renderAll()};
   box.querySelectorAll('[data-job]').forEach(b=>b.onclick=()=>applyCrystal(u.uid,b.dataset.job));
   box.querySelectorAll('[data-give]').forEach(b=>b.onclick=()=>giveItem(u.uid,+b.dataset.give));
@@ -2650,7 +2662,8 @@ function bindDrag(el){
     const uid=+el.dataset.uid, sx=ev.clientX, sy=ev.clientY, rect=el.getBoundingClientRect();
     let ghost=null;
     const move=e=>{
-      if(!ghost&&Math.hypot(e.clientX-sx,e.clientY-sy)>6){
+      // fingers wobble more than mice, so a touch must travel further before it counts as a drag
+      if(!ghost&&Math.hypot(e.clientX-sx,e.clientY-sy)>(ev.pointerType==='mouse'?6:14)){
         ghost=el.cloneNode(true);ghost.classList.add('ghost');ghost.classList.remove('sel');
         ghost.style.width=rect.width+'px';ghost.style.height=rect.height+'px';
         document.body.append(ghost);el.classList.add('lifted');document.body.classList.add('dragging');
