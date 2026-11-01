@@ -802,11 +802,13 @@ const HEROES=[
   {id:'lark',name:'Lark',origin:'sky',job:'bard',cost:1,title:'Skysong Fiddler',quote:'Play us out, Captain? Gladly. Try to keep up!'},
   {id:'ingrid',name:'Ingrid',origin:'sky',job:'lancer',cost:3,title:'Stormwing Lancer',quote:'From the storm\'s eye, I fall like judgment.'},
   {id:'rin',name:'Rin',origin:'ember',job:'bmage',cost:1,title:'Cinder Apprentice',quote:'Oops, was that too much fire? No such thing!'},
+  {id:'nadia',name:'Nadia',origin:'ember',job:'wmage',cost:1,title:'Oasis Priestess',quote:'Rest a moment. The oasis always waits for the weary.'},
   {id:'kaede',name:'Kaede',origin:'ember',job:'ninja',cost:2,title:'Dune Blade',quote:'The desert taught me patience. My blade did not learn it.'},
   {id:'leila',name:'Leila',origin:'ember',job:'bard',cost:2,title:'Sandsilk Dancer',quote:'Dance with me, and your heart will burn brighter.'},
   {id:'amira',name:'Amira',origin:'ember',job:'lancer',cost:2,title:'Sunfire Dragoon',quote:'The desert taught me one thing: strike before the sun moves.'},
   {id:'sahra',name:'Sahra',origin:'ember',job:'knight',cost:3,title:'Sunscorched Princess',quote:'The sun never kneels, and neither shall I.'},
   {id:'sera',name:'Sera',origin:'luna',job:'summoner',cost:1,title:'Moonwell Caller',quote:'Come, little moon. Show them the way home.'},
+  {id:'isolde',name:'Isolde',origin:'luna',job:'lancer',cost:1,title:'Crescent Vanguard',quote:'Stay behind me. The moon asked me to keep you safe.'},
   {id:'nyx',name:'Nyx',origin:'luna',job:'bmage',cost:2,title:'Eclipse Witch',quote:'Shall I put out the stars for you?'},
   {id:'hana',name:'Hana',origin:'luna',job:'ranger',cost:2,title:'Moonbow Huntress',quote:'One breath. One arrow. One less shadow.'},
   {id:'yue',name:'Yue',origin:'luna',job:'ninja',cost:3,title:'Silent Crescent',quote:'...'},
@@ -814,6 +816,7 @@ const HEROES=[
   {id:'mira',name:'Mira',origin:'iron',job:'wmage',cost:1,title:'Field Medic',quote:'Hold still, this might sting. A lot.'},
   {id:'tamsin',name:'Tamsin',origin:'iron',job:'lancer',cost:1,title:'Piston Lancer',quote:'Full pressure! Nobody stands in front of this lance twice!'},
   {id:'elka',name:'Elka',origin:'iron',job:'knight',cost:2,title:'Boilerplate Guard',quote:'Behind me. Always behind me.'},
+  {id:'juno',name:'Juno',origin:'iron',job:'ranger',cost:2,title:'Rivet Sharpshooter',quote:'Wind two knots east. Adjusting... got her.'},
   {id:'vesper',name:'Vesper',origin:'iron',job:'summoner',cost:3,title:'Clockwork Artificer',quote:'Gears set. Spring wound. Rise, my little sentinel.'},
   {id:'odette',name:'Odette',origin:'iron',job:'bmage',cost:3,title:'Arc Engineer',quote:'Fascinating. Let\'s see what twelve thousand volts does.'},
   {id:'brin',name:'Brin',origin:'grove',job:'summoner',cost:1,title:'Fox-Spirit Caller',quote:'Pip says you look friendly. Pip is usually wrong, but okay!'},
@@ -821,6 +824,7 @@ const HEROES=[
   {id:'thalia',name:'Thalia',origin:'grove',job:'wmage',cost:2,title:'Stag-Spirit Druid',quote:'Breathe with the forest. It is older than your fear.'},
   {id:'saffi',name:'Saffi',origin:'grove',job:'ranger',cost:2,title:'Thornbow Scout',quote:'You never saw me. That was the point.'},
   {id:'maelis',name:'Maelis',origin:'grove',job:'bmage',cost:3,title:'Elder Grove Matriarch',quote:'Every seed remembers the tree it will become. So do I.'},
+  {id:'rowan',name:'Rowan',origin:'grove',job:'ninja',cost:3,title:'Bramble Shade',quote:'The forest has many eyes. Tonight, I am all of them.'},
 ];
 const HERO=Object.fromEntries(HEROES.map(h=>[h.id,h]));
 const BONDS=[
@@ -1154,11 +1158,15 @@ const LOOK={
   vesper:{hair:'#c4552c',eye:'#e0a33a',skin:'#fbe3d4',style:'long'},
   amira:{hair:'#1c1820',eye:'#e8b440',skin:'#b5794f',style:'ponytail'},
   lark:{hair:'#5cc6c8',eye:'#3a8fe0',skin:'#ffe6d8',style:'bob'},
+  nadia:{hair:'#1c1618',eye:'#e8a83a',skin:'#a8714c',style:'braid'},
+  isolde:{hair:'#d4c8ee',eye:'#8a62d8',skin:'#fbeee8',style:'ponytail'},
+  juno:{hair:'#c4552c',eye:'#7a98b0',skin:'#f3d0b0',style:'bob'},
+  rowan:{hair:'#4a2440',eye:'#e8b83a',skin:'#7a4e34',style:'ponytail'},
 };
 // Full-body illustrations published next to the page (generated with Gemini). The drawn portraits are the fallback.
 const ART_FILES=Object.fromEntries(HEROES.map(h=>h.id).map(id=>[id,`art/${id}.jpg`]));
 // heroines with an off-duty outfit drawn; the rest only offer their classic look
-const CASUAL=new Set(['aria','liesel','celestine','rin','kaede','sahra','sera','nyx','yue','mira','elka','odette','fiora','ingrid','leila','hana','cosette','tamsin','vesper','amira','lark','brin','ivy','thalia','saffi','maelis']);
+const CASUAL=new Set(['aria','liesel','celestine','rin','kaede','sahra','sera','nyx','yue','mira','elka','odette','fiora','ingrid','leila','hana','cosette','tamsin','vesper','amira','lark','brin','ivy','thalia','saffi','maelis','nadia','isolde','juno','rowan']);
 // bond scenes and covers that have finished illustrations; anything missing falls back to portraits
 const SCENE_ART=new Set(['amira-vesper','aria-kaede','brin-thalia','celestine-maelis','celestine-sahra','fiora-hana','fiora-lark','ingrid-tamsin','ivy-elka','kaede-saffi','leila-cosette','liesel-elka','mira-odette','nyx-yue','rin-sera']);
 const COVER_ART=new Set(['title','run','tower','daily','festival']);
@@ -1880,7 +1888,7 @@ function overdrive(){
 
 /* ================= poses ================= */
 // Heights (px) of each cut-out pose at the same body scale as the 640px idle art
-const POSE_H={brin:{attack:485,cast:609,hurt:600},ivy:{attack:640,cast:662,hurt:627},thalia:{attack:567,cast:657,hurt:617},saffi:{attack:561,cast:618,hurt:483},maelis:{attack:469,cast:663,hurt:407},aria:{attack:640,cast:646,hurt:640},liesel:{attack:639,cast:665,hurt:640},celestine:{attack:635,cast:656,hurt:650},rin:{attack:640,cast:640,hurt:640},kaede:{attack:633,cast:655,hurt:640},sahra:{attack:639,cast:665,hurt:639},sera:{attack:456,cast:601,hurt:640},nyx:{attack:640,cast:648,hurt:640},yue:{attack:640,cast:675,hurt:610},mira:{attack:640,cast:666,hurt:638},elka:{attack:611,cast:673,hurt:623},odette:{attack:640,cast:639,hurt:610},
+const POSE_H={nadia:{attack:571,cast:696,hurt:604},'nadia-casual':{attack:527,cast:712,hurt:557},'nadia-beach':{attack:534,cast:663,hurt:603},isolde:{attack:477,cast:621,hurt:610},'isolde-casual':{attack:482,cast:611,hurt:524},'isolde-beach':{attack:466,cast:566,hurt:565},juno:{attack:564,cast:447,hurt:600},'juno-casual':{attack:637,cast:478,hurt:594},'juno-beach':{attack:553,cast:426,hurt:603},rowan:{attack:518,cast:590,hurt:578},'rowan-casual':{attack:491,cast:518,hurt:568},'rowan-beach':{attack:509,cast:629,hurt:605},brin:{attack:485,cast:609,hurt:600},ivy:{attack:640,cast:662,hurt:627},thalia:{attack:567,cast:657,hurt:617},saffi:{attack:561,cast:618,hurt:483},maelis:{attack:469,cast:663,hurt:407},aria:{attack:640,cast:646,hurt:640},liesel:{attack:639,cast:665,hurt:640},celestine:{attack:635,cast:656,hurt:650},rin:{attack:640,cast:640,hurt:640},kaede:{attack:633,cast:655,hurt:640},sahra:{attack:639,cast:665,hurt:639},sera:{attack:456,cast:601,hurt:640},nyx:{attack:640,cast:648,hurt:640},yue:{attack:640,cast:675,hurt:610},mira:{attack:640,cast:666,hurt:638},elka:{attack:611,cast:673,hurt:623},odette:{attack:640,cast:639,hurt:610},
   fiora:{attack:679,cast:672,hurt:640},leila:{attack:640,cast:665,hurt:638},hana:{attack:679,cast:679,hurt:639},
   ingrid:{attack:489,cast:676,hurt:504},cosette:{attack:639,cast:667,hurt:632},tamsin:{attack:549,cast:659,hurt:640},
   vesper:{attack:583,cast:652,hurt:591},amira:{attack:466,cast:653,hurt:643},lark:{attack:641,cast:671,hurt:641},
