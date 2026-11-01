@@ -109,13 +109,13 @@ button:focus-visible,.tok:focus-visible{outline:2px solid var(--gold);outline-of
 .trait.off{opacity:.55}
 
 /* ---------- board: a tilted 2.5D arena; units stand upright on it ---------- */
-:root{--tilt:26deg}
+:root{--tilt:26deg;--upright:1.11}
 .vsline{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;font-size:13px;color:var(--muted);width:min(100%,520px);margin:0 auto}
 .vsline b{color:var(--ink);font-weight:700}
 .vsline .foe{color:#ffc2cc}
 .stage{position:relative;width:min(100%,520px);margin:0 auto;perspective:1100px;perspective-origin:50% 0%;padding-top:12%}
 #vfx{position:absolute;left:-12%;top:-8%;width:124%;height:112%;pointer-events:none;z-index:4}
-.board{position:relative;width:100%;aspect-ratio:7/8;transform:rotateX(var(--tilt));transform-origin:50% 100%;transform-style:preserve-3d;touch-action:none}
+.board{position:relative;width:100%;aspect-ratio:7/8;transform:rotateX(var(--tilt));transform-origin:50% 100%;touch-action:none}
 .floor{position:absolute;inset:0;border-radius:14px;overflow:hidden;background:url(art/floor.jpg) center/cover,#1a2150;
   box-shadow:0 0 0 3px #c9a24a,0 0 0 6px #241a4f,0 0 0 7px rgba(244,201,107,.5),0 0 44px rgba(138,238,255,.28),0 34px 50px rgba(0,0,0,.7)}
 .floor::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,70,120,.18),rgba(255,70,120,.04) 48%,rgba(80,170,255,.05) 52%,rgba(80,170,255,.2))}
@@ -130,7 +130,7 @@ button:focus-visible,.tok:focus-visible{outline:2px solid var(--gold);outline-of
 .cell.hot{background:rgba(138,238,255,.4)!important;box-shadow:inset 0 0 0 2px var(--crystal)}
 .midline{position:absolute;left:0;right:0;top:50%;height:3px;margin-top:-1.5px;pointer-events:none;
   background:linear-gradient(90deg,transparent,rgba(244,201,107,.9),transparent);box-shadow:0 0 12px rgba(244,201,107,.6)}
-.ulayer,.fx{position:absolute;inset:0;pointer-events:none;transform-style:preserve-3d}
+.ulayer,.fx{position:absolute;inset:0;pointer-events:none}
 .ulayer .tok{pointer-events:auto}
 body.dragging .ulayer .tok{pointer-events:none}
 .result{position:absolute;inset:0;z-index:5;display:grid;place-items:center;pointer-events:none;background:radial-gradient(ellipse at 50% 55%,rgba(5,6,24,.65),rgba(5,6,24,.2));animation:fadein .3s}
@@ -141,12 +141,14 @@ body.dragging .ulayer .tok{pointer-events:none}
 .result span{font-size:15px;text-shadow:0 1px 3px #000}
 
 /* ---------- unit: shadow on the floor, figure standing up ---------- */
-.tok{position:absolute;width:calc(100% / 7);height:calc(100% / 8);transform-style:preserve-3d;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+.tok{position:absolute;width:calc(100% / 7);height:calc(100% / 8);cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
 .shadow{position:absolute;left:8%;right:8%;top:30%;bottom:6%;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.6),rgba(0,0,0,0))}
 .shadow::after{content:"";position:absolute;inset:8%;border-radius:50%;border:2px solid var(--crystal);opacity:.5;box-shadow:0 0 8px var(--crystal)}
 .tok.s1 .shadow::after{border-color:var(--foe);box-shadow:0 0 8px var(--foe)}
 .tok.sel .shadow::after{border-color:var(--gold);opacity:1;box-shadow:0 0 14px var(--gold)}
-.stand{position:absolute;inset:0;transform-origin:50% 74%;transform:translateZ(1px) rotateX(calc(-1 * var(--tilt)))}
+/* figures are drawn on the tilted board and stretched upright (1/cos tilt) instead of standing in a 3D context:
+   some Windows GPUs depth-sort 3D layers wrongly and hide the figures behind the floor */
+.stand{position:absolute;inset:0;transform-origin:50% 74%;transform:scaleY(var(--upright))}
 .spr{position:absolute;left:50%;bottom:26%;height:190%;transform:translateX(-50%);transform-origin:50% 100%;
   animation:breathe 2.6s ease-in-out infinite;animation-delay:var(--d,0s)}
 .fig{display:block;height:100%;width:auto;max-width:none;transform:scaleX(var(--flip,1));
@@ -216,7 +218,7 @@ canvas.pt{display:block}
 @keyframes ascend{0%{filter:brightness(3) drop-shadow(0 0 16px #fff)}100%{filter:none}}
 
 /* ---------- fx ---------- */
-.ftxt{position:absolute;transform:translate(-50%,-50%) rotateX(calc(-1 * var(--tilt))) translateY(-120%);font-weight:800;font-size:13px;pointer-events:none;white-space:nowrap;
+.ftxt{position:absolute;transform:translate(-50%,-50%) scaleY(var(--upright)) translateY(-120%);font-weight:800;font-size:13px;pointer-events:none;white-space:nowrap;
   text-shadow:0 1px 2px #000,0 0 4px #000;animation:rise .8s ease-out forwards}
 .ftxt.crit{font-size:17px;color:var(--gold)}
 .ftxt.heal{color:var(--hp)}
@@ -2364,7 +2366,8 @@ function tokenEl(u,side,opts={}){
   return el;
 }
 function animate(el,frames,ms){if(el&&el.animate)el.animate(frames,{duration:ms/G.speed,easing:'ease-out'})}
-function posEl(el,c,r){el.style.left=(c/COLS*100)+'%';el.style.top=(r/ROWS*100)+'%'}
+// nearer rows paint over farther ones (the board is flat, so depth comes from z-index)
+function posEl(el,c,r){el.style.left=(c/COLS*100)+'%';el.style.top=(r/ROWS*100)+'%';el.style.zIndex=10+Math.round(r*10)}
 function readyBondHeroes(){
   const onBoard=new Set(boardUnits().map(x=>x.u.hero)), s=new Set();
   for(const b of BONDS)if(G.affinity[b.key]>=3&&onBoard.has(b.a)&&onBoard.has(b.b)){s.add(b.a);s.add(b.b)}
