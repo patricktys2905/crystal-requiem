@@ -837,6 +837,8 @@ const BONDS=[
   {a:'fiora',b:'lark',name:'Crow\'s Nest Chorus',why:'Lark sings the night watch. Fiora pretends not to listen.'},
   {a:'brin',b:'thalia',name:'Spirit Kin',why:'Thalia found Brin and her fox spirit lost in a snowstorm and taught her to listen.'},
   {a:'ivy',b:'elka',name:'Bark and Boiler',why:'Two shield-walls who argue about whether wood or steel holds better.'},
+  {a:'kaede',b:'saffi',name:'Unseen Hunt',why:'Kaede tracked Saffi across two kingdoms and never once caught her. Now they hunt together.'},
+  {a:'celestine',b:'maelis',name:'Rootbound Crown',why:'When no kingdom would shelter the exiled princess, the Elder Grove did.'},
 ].map(b=>({...b,key:b.a+'-'+b.b}));
 const BOSSES={
   5:{name:'Hollow Wyrmling',title:'A sky-drake hollowed out by the dark',hp:2600,ad:85,as:0.6,armor:30,mana:90,aoe:1,art:'art/boss-wyrm.webp'},
@@ -940,6 +942,12 @@ const roundBoss=r=>G.mode==='festival'?(BOSSES[r]&&{...BOSSES[r],name:FEST_BOSS[
 const enemyMul=()=>(G.asc>=1?1.1:1)*(G.asc>=6?1.1:1)*(G.mode==='tower'?1+Math.max(0,G.round-12)*0.09:1);
 const roundLabel=()=>G.mode==='tower'?`Floor <b>${G.round}</b>`:`Round <b>${G.round}</b> of ${MAX_ROUND}${G.mode==='festival'?' · Summer Festival':G.mode==='daily'?' · Daily':G.asc?` · Ascension ${G.asc}`:''}`;
 const SCENES={
+  'kaede-saffi':[['a','Three weeks. I followed your trail for three weeks, and every night your camp was already cold.'],['b','Four weeks. You missed the first one.'],
+    ['a','...You were watching me the whole time, weren\'t you?'],['b','You talk to your sword when you think no one is listening. It was hard to leave.'],
+    ['a','Then why show yourself now?'],['b','Something bigger is hunting both of us. I would rather have you on my side of the trees. Keep up, Dune Blade.']],
+  'celestine-maelis':[['a','Elder Maelis. You never asked why I came to the Grove with nothing but a torn cloak.'],['b','The trees told me. They remember every crown that was ever lost beneath them.'],
+    ['a','Then they know I failed my people.'],['b','A seed does not fail because winter came. It waits, and it grows roots where no one is looking.'],
+    ['a','And if I never take back the throne?'],['b','Then you will still have a home here, little sky-princess. Now, heal my stubborn old knees and let us go to war.']],
   'brin-thalia':[['a','Thalia! Pip found a whole patch of glowberries. Can we stop? Just for a minute?'],['b','You said that about the mushrooms. And the river. And the very interesting rock.'],
     ['a','The rock WAS interesting. Pip thought so too.'],['b','Pip agrees with everything you say. That is what happens when a spirit loves you.'],
     ['a','...Is that why your stag always looks so grumpy at me?'],['b','He is not grumpy. He is old. Go on, then. One minute. Pick some for me too.']],
@@ -1152,10 +1160,10 @@ const ART_FILES=Object.fromEntries(HEROES.map(h=>h.id).map(id=>[id,`art/${id}.jp
 // heroines with an off-duty outfit drawn; the rest only offer their classic look
 const CASUAL=new Set(['aria','liesel','celestine','rin','kaede','sahra','sera','nyx','yue','mira','elka','odette','fiora','ingrid','leila','hana','cosette','tamsin','vesper','amira','lark','brin','ivy','thalia','saffi','maelis']);
 // bond scenes and covers that have finished illustrations; anything missing falls back to portraits
-const SCENE_ART=new Set(['aria-kaede','rin-sera','liesel-elka','nyx-yue','mira-odette','celestine-sahra','fiora-hana','ingrid-tamsin','leila-cosette','amira-vesper','fiora-lark']);
+const SCENE_ART=new Set(['amira-vesper','aria-kaede','brin-thalia','celestine-maelis','celestine-sahra','fiora-hana','fiora-lark','ingrid-tamsin','ivy-elka','kaede-saffi','leila-cosette','liesel-elka','mira-odette','nyx-yue','rin-sera']);
 const COVER_ART=new Set(['title','run','tower','daily','festival']);
 // short looping clips made from the paintings; each falls back to its still
-const CLIP_ART=new Set(['title','scene-aria-kaede','scene-nyx-yue','scene-celestine-sahra','scene-liesel-elka','scene-amira-vesper','scene-fiora-hana','scene-fiora-lark','scene-ingrid-tamsin','scene-leila-cosette','scene-mira-odette','scene-rin-sera']);
+const CLIP_ART=new Set(['scene-amira-vesper','scene-aria-kaede','scene-brin-thalia','scene-celestine-maelis','scene-celestine-sahra','scene-fiora-hana','scene-fiora-lark','scene-ingrid-tamsin','scene-ivy-elka','scene-kaede-saffi','scene-leila-cosette','scene-liesel-elka','scene-mira-odette','scene-nyx-yue','scene-rin-sera','title']);
 const paint=(key,src,alt='')=>CLIP_ART.has(key)&&!fx.reduce?`<video src="art/clip-${key}.mp4" poster="${src}" autoplay muted loop playsinline aria-label="${alt}"></video>`:`<img src="${src}" alt="${alt}">`;
 META.outfit=META.outfit||{};
 // beach outfits exist for the first 21 heroines
