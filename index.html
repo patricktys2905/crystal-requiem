@@ -806,7 +806,7 @@ const HEROES=[
   {id:'leila',name:'Leila',origin:'ember',job:'bard',cost:2,title:'Sandsilk Dancer',quote:'Dance with me, and your heart will burn brighter.'},
   {id:'amira',name:'Amira',origin:'ember',job:'lancer',cost:2,title:'Sunfire Dragoon',quote:'The desert taught me one thing: strike before the sun moves.'},
   {id:'sahra',name:'Sahra',origin:'ember',job:'knight',cost:3,title:'Sunscorched Princess',quote:'The sun never kneels, and neither shall I.'},
-  {id:'sera',name:'Sera',origin:'luna',job:'wmage',cost:1,title:'Moonwell Acolyte',quote:'Rest now. The moon will mend you.'},
+  {id:'sera',name:'Sera',origin:'luna',job:'summoner',cost:1,title:'Moonwell Caller',quote:'Come, little moon. Show them the way home.'},
   {id:'nyx',name:'Nyx',origin:'luna',job:'bmage',cost:2,title:'Eclipse Witch',quote:'Shall I put out the stars for you?'},
   {id:'hana',name:'Hana',origin:'luna',job:'ranger',cost:2,title:'Moonbow Huntress',quote:'One breath. One arrow. One less shadow.'},
   {id:'yue',name:'Yue',origin:'luna',job:'ninja',cost:3,title:'Silent Crescent',quote:'...'},
@@ -814,13 +814,13 @@ const HEROES=[
   {id:'mira',name:'Mira',origin:'iron',job:'wmage',cost:1,title:'Field Medic',quote:'Hold still, this might sting. A lot.'},
   {id:'tamsin',name:'Tamsin',origin:'iron',job:'lancer',cost:1,title:'Piston Lancer',quote:'Full pressure! Nobody stands in front of this lance twice!'},
   {id:'elka',name:'Elka',origin:'iron',job:'knight',cost:2,title:'Boilerplate Guard',quote:'Behind me. Always behind me.'},
-  {id:'vesper',name:'Vesper',origin:'iron',job:'ranger',cost:3,title:'Clockwork Sharpshooter',quote:'Wind, distance, heartbeat. Calculated. Released.'},
+  {id:'vesper',name:'Vesper',origin:'iron',job:'summoner',cost:3,title:'Clockwork Artificer',quote:'Gears set. Spring wound. Rise, my little sentinel.'},
   {id:'odette',name:'Odette',origin:'iron',job:'bmage',cost:3,title:'Arc Engineer',quote:'Fascinating. Let\'s see what twelve thousand volts does.'},
   {id:'brin',name:'Brin',origin:'grove',job:'summoner',cost:1,title:'Fox-Spirit Caller',quote:'Pip says you look friendly. Pip is usually wrong, but okay!'},
   {id:'ivy',name:'Ivy',origin:'grove',job:'knight',cost:1,title:'Barkshield Warden',quote:'The forest has stood for a thousand years. So will this line.'},
-  {id:'thalia',name:'Thalia',origin:'grove',job:'summoner',cost:2,title:'Stag-Spirit Druid',quote:'Breathe with the forest. It is older than your fear.'},
+  {id:'thalia',name:'Thalia',origin:'grove',job:'wmage',cost:2,title:'Stag-Spirit Druid',quote:'Breathe with the forest. It is older than your fear.'},
   {id:'saffi',name:'Saffi',origin:'grove',job:'ranger',cost:2,title:'Thornbow Scout',quote:'You never saw me. That was the point.'},
-  {id:'maelis',name:'Maelis',origin:'grove',job:'summoner',cost:3,title:'Elder Grove Matriarch',quote:'Every seed remembers the tree it will become. So do I.'},
+  {id:'maelis',name:'Maelis',origin:'grove',job:'bmage',cost:3,title:'Elder Grove Matriarch',quote:'Every seed remembers the tree it will become. So do I.'},
 ];
 const HERO=Object.fromEntries(HEROES.map(h=>[h.id,h]));
 const BONDS=[
@@ -1880,28 +1880,28 @@ function overdrive(){
 
 /* ================= poses ================= */
 // Heights (px) of each cut-out pose at the same body scale as the 640px idle art
-const POSE_H={brin:{attack:485,cast:609,hurt:600},ivy:{attack:640,cast:662,hurt:627},thalia:{attack:542,cast:617,hurt:617},saffi:{attack:561,cast:618,hurt:483},maelis:{attack:478,cast:601,hurt:407},aria:{attack:640,cast:646,hurt:640},liesel:{attack:639,cast:665,hurt:640},celestine:{attack:635,cast:656,hurt:650},rin:{attack:640,cast:640,hurt:640},kaede:{attack:633,cast:655,hurt:640},sahra:{attack:639,cast:665,hurt:639},sera:{attack:603,cast:666,hurt:640},nyx:{attack:640,cast:648,hurt:640},yue:{attack:640,cast:675,hurt:610},mira:{attack:640,cast:666,hurt:638},elka:{attack:611,cast:673,hurt:623},odette:{attack:640,cast:639,hurt:610},
+const POSE_H={brin:{attack:485,cast:609,hurt:600},ivy:{attack:640,cast:662,hurt:627},thalia:{attack:567,cast:657,hurt:617},saffi:{attack:561,cast:618,hurt:483},maelis:{attack:469,cast:663,hurt:407},aria:{attack:640,cast:646,hurt:640},liesel:{attack:639,cast:665,hurt:640},celestine:{attack:635,cast:656,hurt:650},rin:{attack:640,cast:640,hurt:640},kaede:{attack:633,cast:655,hurt:640},sahra:{attack:639,cast:665,hurt:639},sera:{attack:456,cast:601,hurt:640},nyx:{attack:640,cast:648,hurt:640},yue:{attack:640,cast:675,hurt:610},mira:{attack:640,cast:666,hurt:638},elka:{attack:611,cast:673,hurt:623},odette:{attack:640,cast:639,hurt:610},
   fiora:{attack:679,cast:672,hurt:640},leila:{attack:640,cast:665,hurt:638},hana:{attack:679,cast:679,hurt:639},
   ingrid:{attack:489,cast:676,hurt:504},cosette:{attack:639,cast:667,hurt:632},tamsin:{attack:549,cast:659,hurt:640},
-  vesper:{attack:666,cast:651,hurt:627},amira:{attack:466,cast:653,hurt:643},lark:{attack:641,cast:671,hurt:641},
+  vesper:{attack:583,cast:652,hurt:591},amira:{attack:466,cast:653,hurt:643},lark:{attack:641,cast:671,hurt:641},
   'aria-casual':{attack:617,cast:648,hurt:617},'liesel-casual':{attack:640,cast:673,hurt:612},'celestine-casual':{attack:645,cast:671,hurt:591},
   'rin-casual':{attack:633,cast:638,hurt:632},'kaede-casual':{attack:581,cast:656,hurt:639},'sahra-casual':{attack:596,cast:683,hurt:608},
-  'sera-casual':{attack:588,cast:660,hurt:622},'nyx-casual':{attack:625,cast:641,hurt:629},'yue-casual':{attack:562,cast:661,hurt:595},
+  'sera-casual':{attack:530,cast:646,hurt:622},'nyx-casual':{attack:625,cast:641,hurt:629},'yue-casual':{attack:562,cast:661,hurt:595},
   'mira-casual':{attack:624,cast:652,hurt:618},'elka-casual':{attack:630,cast:690,hurt:638},'odette-casual':{attack:620,cast:644,hurt:622},
   'fiora-casual':{attack:677,cast:658,hurt:619},'ingrid-casual':{attack:460,cast:676,hurt:490},'leila-casual':{attack:639,cast:669,hurt:597},
   'hana-casual':{attack:674,cast:654,hurt:597},'cosette-casual':{attack:640,cast:658,hurt:622},'tamsin-casual':{attack:458,cast:666,hurt:473},
-  'vesper-casual':{attack:625,cast:648,hurt:466},'amira-casual':{attack:447,cast:619,hurt:520},'lark-casual':{attack:514,cast:678,hurt:502},
+  'vesper-casual':{attack:578,cast:574,hurt:476},'amira-casual':{attack:447,cast:619,hurt:520},'lark-casual':{attack:514,cast:678,hurt:502},
   'brin-casual':{attack:580,cast:667,hurt:567},'brin-beach':{attack:544,cast:692,hurt:511},
   'ivy-casual':{attack:527,cast:653,hurt:531},
   'ivy-beach':{attack:520,cast:667,hurt:564},
-  'thalia-casual':{attack:528,cast:590,hurt:591},
-  'thalia-beach':{attack:535,cast:680,hurt:582},
+  'thalia-casual':{attack:550,cast:598,hurt:591},
+  'thalia-beach':{attack:591,cast:654,hurt:582},
   'saffi-casual':{attack:630,cast:661,hurt:513},
   'saffi-beach':{attack:684,cast:670,hurt:544},
-  'maelis-casual':{attack:510,cast:645,hurt:604},
-  'maelis-beach':{attack:511,cast:603,hurt:585},
+  'maelis-casual':{attack:556,cast:655,hurt:604},
+  'maelis-beach':{attack:561,cast:665,hurt:585},
   'aria-beach':{attack:488,cast:644,hurt:554},'liesel-beach':{attack:460,cast:675,hurt:569},'celestine-beach':{attack:580,cast:671,hurt:637},
-  'rin-beach':{attack:638,cast:656,hurt:488},'kaede-beach':{attack:387,cast:557,hurt:478},'sahra-beach':{attack:604,cast:681,hurt:637},'sera-beach':{attack:597,cast:676,hurt:570},'nyx-beach':{attack:551,cast:661,hurt:620},'yue-beach':{attack:489,cast:684,hurt:571},'mira-beach':{attack:587,cast:643,hurt:562},'elka-beach':{attack:544,cast:657,hurt:567},'odette-beach':{attack:581,cast:656,hurt:599},'fiora-beach':{attack:651,cast:675,hurt:526},'ingrid-beach':{attack:479,cast:688,hurt:640},'leila-beach':{attack:608,cast:651,hurt:574},'hana-beach':{attack:655,cast:679,hurt:544},'cosette-beach':{attack:584,cast:657,hurt:579},'tamsin-beach':{attack:514,cast:675,hurt:590},'vesper-beach':{attack:640,cast:650,hurt:593},'amira-beach':{attack:459,cast:665,hurt:556},'lark-beach':{attack:539,cast:642,hurt:534}};
+  'rin-beach':{attack:638,cast:656,hurt:488},'kaede-beach':{attack:387,cast:557,hurt:478},'sahra-beach':{attack:604,cast:681,hurt:637},'sera-beach':{attack:487,cast:650,hurt:570},'nyx-beach':{attack:551,cast:661,hurt:620},'yue-beach':{attack:489,cast:684,hurt:571},'mira-beach':{attack:587,cast:643,hurt:562},'elka-beach':{attack:544,cast:657,hurt:567},'odette-beach':{attack:581,cast:656,hurt:599},'fiora-beach':{attack:651,cast:675,hurt:526},'ingrid-beach':{attack:479,cast:688,hurt:640},'leila-beach':{attack:608,cast:651,hurt:574},'hana-beach':{attack:655,cast:679,hurt:544},'cosette-beach':{attack:584,cast:657,hurt:579},'tamsin-beach':{attack:514,cast:675,hurt:590},'vesper-beach':{attack:469,cast:664,hurt:557},'amira-beach':{attack:459,cast:665,hurt:556},'lark-beach':{attack:539,cast:642,hurt:534}};
 const POSE_RANK={hurt:1,attack:2,cast:3};
 const preloaded=[];
 function preloadPoses(ids){
