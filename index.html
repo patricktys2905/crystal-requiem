@@ -146,7 +146,7 @@ body.dragging .ulayer .tok{pointer-events:none}
 .shadow::after{content:"";position:absolute;inset:8%;border-radius:50%;border:2px solid var(--crystal);opacity:.5;box-shadow:0 0 8px var(--crystal)}
 .tok.s1 .shadow::after{border-color:var(--foe);box-shadow:0 0 8px var(--foe)}
 .tok.sel .shadow::after{border-color:var(--gold);opacity:1;box-shadow:0 0 14px var(--gold)}
-.stand{position:absolute;inset:0;transform-origin:50% 74%;transform:rotateX(calc(-1 * var(--tilt)))}
+.stand{position:absolute;inset:0;transform-origin:50% 74%;transform:translateZ(1px) rotateX(calc(-1 * var(--tilt)))}
 .spr{position:absolute;left:50%;bottom:26%;height:190%;transform:translateX(-50%);transform-origin:50% 100%;
   animation:breathe 2.6s ease-in-out infinite;animation-delay:var(--d,0s)}
 .fig{display:block;height:100%;width:auto;max-width:none;transform:scaleX(var(--flip,1));
@@ -197,7 +197,8 @@ canvas.pt{display:block}
 .heart{position:absolute;left:68%;bottom:196%;width:16px;fill:#ff8fb8;filter:drop-shadow(0 0 4px #ff4f97);animation:pulseh 1.2s ease-in-out infinite}
 @keyframes pulseh{50%{transform:scale(1.25)}}
 .tok.preview{cursor:help}
-.tok.preview .stand,.tok.preview .shadow{opacity:.6}
+/* fade the flat leaves, not the rotated stand: opacity on a 3D layer makes some GPUs sort it behind the floor */
+.tok.preview .shadow,.tok.preview .spr,.tok.preview .plate,.tok.preview .bars{opacity:.6}
 .tok.preview .fig{filter:saturate(.55) brightness(.85) drop-shadow(0 0 1px rgba(10,13,41,.9))}
 .tok.boss .spr{height:300%;bottom:14%}
 .tok.spirit .spr{height:140%;bottom:22%}
@@ -207,7 +208,7 @@ canvas.pt{display:block}
 .tok.boss .bars{bottom:320%;left:-15%;right:-15%}
 .tok.od .fig{filter:drop-shadow(0 0 2px #fff) drop-shadow(0 0 9px var(--crystal))}
 .tok.sel .fig{filter:drop-shadow(0 0 2px #fff) drop-shadow(0 0 8px var(--gold))}
-.tok.lifted .stand,.tok.lifted .shadow{opacity:.3}
+.tok.lifted .shadow,.tok.lifted .spr,.tok.lifted .plate,.tok.lifted .bars{opacity:.3}
 .tok.ghost{position:fixed!important;pointer-events:none;z-index:50}
 .tok.ghost .stand{transform:none}
 .tok.ghost .shadow{display:none}
